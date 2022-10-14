@@ -37,7 +37,7 @@ class AuthController extends Controller
                 'token' => $token,
                 'type' => 'bearer',
             ]
-        ]);
+        ], 202);
 
     }
 
@@ -59,7 +59,7 @@ class AuthController extends Controller
                 'token' => $token,
                 'type' => 'bearer',
             ]
-        ]);
+        ], 202);
     }
 
     public function logout() : object
@@ -68,7 +68,7 @@ class AuthController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'Successfully logged out',
-        ]);
+        ], 202);
     }
 
     public function refresh() : object
@@ -80,7 +80,7 @@ class AuthController extends Controller
                 'token' => Auth::refresh(),
                 'type' => 'bearer',
             ]
-        ]);
+        ], 202);
     }
 
 }
