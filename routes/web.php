@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PruebaController;
+use App\Http\Controllers\DictionaryController;
 
 /*
 |--------------------------------------------------------------------------
