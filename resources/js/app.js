@@ -1,7 +1,13 @@
-import './bootstrap';
+import './bootstrap'
 
-import { createApp} from "vue"
+import { createApp } from "vue"
 
-import app from './layouts/app.vue'
+import Login from './components/user/login.vue'
+import Search from './components/search/search.vue'
 
-createApp(app).mount("#app")
+createApp({
+    components:{
+        Login,
+        Search,
+    },
+}).mount('#app')

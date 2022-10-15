@@ -1,8 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\PruebaController;
-use App\Http\Controllers\DictionaryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,5 +14,9 @@ use App\Http\Controllers\DictionaryController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('login');
+});
+
+Route::get('/search', function () {
+    return view('search');
 });
