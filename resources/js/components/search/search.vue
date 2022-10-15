@@ -14,8 +14,8 @@
                     <h2>Buscar</h2>
                     <form @submit.prevent="submit">
                         <div class="col-md-12">
-                            <div class="alert alert-danger" role="alert" v-if="alertError">
-                                Validar Token
+                            <div :class="[typeError]" role="alert" v-if="alertError">
+                                {{ menssageAlert }}
                             </div>
                             <div class="mb-3">
                                 <label for="token" class="form-label">Token</label>
@@ -25,13 +25,13 @@
                         <div class="col-md-12">
                             <div class="mb-3">
                                 <label for="nombre" class="form-label">Nombre</label>
-                                <input type="text" class="form-control" id="nombre" v-model="form.nombre" placeholder="Jose Alfonso Gonzales" required>
+                                <input type="text" class="form-control" id="nombre" v-model="form.name" placeholder="Jose Alfonso Gonzales" required>
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="mb-3">
                                 <label for="porcentaje" class="form-label">Porcentaje parentesco</label>
-                                <input type="number" class="form-control" min="1" max="100" id="porcentaje" v-model="form.porcentaje" placeholder="90" required>
+                                <input type="number" class="form-control" min="1" max="100" id="porcentaje" v-model="form.similary" placeholder="90">
                             </div>
                         </div>
                         <div class="col-md-12">
@@ -50,24 +50,50 @@ import axios from "axios";
 export default {
     data() {
         return {
+            typeError: null,
             showToken: null,
             alertError: null,
+            menssageAlert: null,
             token: null,
             form:{
-                nombre: null,
-                porcentaje: null,
+                name: null,
+                similary: null,
             }
         }
     },
     methods:{
         submit(){
-            console.log(this.form, this.token)
-            axios.post("/api/v1/searchRegister",
-                this.form
+            let self = this;
+            axios.post("/api/v1/searchRegister",{
+                'name': this.form.name,
+                'similary': this.form.similary
+            },{
+                headers: {
+                    'Authorization': `Bearer ${this.token}`
+                }
+            }
             ).then(res => {
+
+                this.alertError = true
+                this.menssageAlert = 'esto encontramos'
+                this.typeError = 'alert alert-success'
                 console.log(res)
+
             }).catch(function (error) {
-                console.log(error)
+
+                self.typeError = 'alert alert-danger'
+                let messageError = error.response.data.message
+                let statudError = error.response.status
+
+                if (statudError === 401){
+                    self.alertError = true;
+                    self.menssageAlert = 'Verificar Token'
+                }
+                if (messageError && statudError === 422){
+                    self.alertError = true;
+                    self.menssageAlert = messageError
+                }
+
             });
         }
     }
