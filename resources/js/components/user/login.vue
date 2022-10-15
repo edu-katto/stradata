@@ -14,8 +14,8 @@
                     <h2>Login</h2>
                     <form @submit.prevent="submit">
                         <div class="col-md-12">
-                            <div class="alert alert-danger" role="alert" v-if="alertError">
-                                Usuario o contraseña incorrectos
+                            <div :class="[typeError]" role="alert" v-if="alertError">
+                                {{ menssageAlert }}
                             </div>
                             <div class="mb-3">
                                 <label for="email" class="form-label">Email address</label>
@@ -53,8 +53,10 @@ import axios from "axios";
 export default {
     data() {
         return {
+            typeError: null,
             showToken: null,
             alertError: null,
+            menssageAlert: null,
             token: null,
             form:{
                 email: null,
@@ -64,26 +66,31 @@ export default {
     },
     methods:{
         submit(){
-
+            let self = this;
             axios.post("/api/v1/login",
                 this.form
             ).then(res => {
 
-                if (res.data.message == "Unauthorized"){
-                    this.alertError = true
-                    this.showToken = false
-                }
-
-                if (res.status == 202){
-                    this.showToken = true
-                    this.alertError = false
-                    this.form.password = null
-                    this.token = res.data.authorisation.token
-                }
+                this.showToken = true
+                this.alertError = false
+                this.form.password = null
+                this.token = res.data.authorisation.token
 
             })
             .catch(function (error) {
-                console.log(error)
+
+                self.typeError = 'alert alert-danger'
+                let messageError = error.response.data.message
+                let statudError = error.response.status
+
+                if (statudError === 401){
+                    self.alertError = true;
+                    self.menssageAlert = 'Usuario o contraseña incorrectas'
+                }
+                if (messageError && statudError === 422){
+                    self.alertError = true;
+                    self.menssageAlert = messageError
+                }
             });
         }
     }
