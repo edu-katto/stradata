@@ -5,9 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-use TheSeer\Tokenizer\Exception;
 
 class Dictionary extends Model
 {
@@ -18,6 +16,7 @@ class Dictionary extends Model
 
         try {
 
+            $logSearch = new LogSearch();
             $dataDb = Dictionary::all();
             $uuidPetition = Str::uuid();
             $similary = [];
@@ -31,9 +30,12 @@ class Dictionary extends Model
                 similar_text($stringUser, $stringDb, $percentage);
 
                 if (round($percentage) >= $similaryPercentage){
-                    unset($data->id);
                     $similary[] = Arr::add($data, 'porcentaje', round($percentage));
                     $similary[] = Arr::add($data, 'uuid', $uuidPetition);
+                    $similary[] = Arr::add($data, 'nombre_busqueda', $request->name);
+
+                    //insertamos en la base de datos el log
+                    $logSearch->saveLog($data);
                 }
 
             }

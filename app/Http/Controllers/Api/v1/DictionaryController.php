@@ -9,7 +9,7 @@ use App\Models\Dictionary;
 class DictionaryController extends Controller
 {
 
-    public function searchRegister(DictionarySearchRequest $request, Dictionary $dictionary){
+    public function searchRegister(DictionarySearchRequest $request, Dictionary $dictionary) : object{
 
         $dataSimilary = $dictionary->searchRegisterSimilary($request);
 
@@ -33,5 +33,7 @@ class DictionaryController extends Controller
                 'message' => 'Error de sistema'
             ], 500);
         }
+
+        return response()->json([], 500);
     }
 }
