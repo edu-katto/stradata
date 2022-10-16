@@ -9,7 +9,7 @@
         </div>
 
         <div class="row align-items-md-stretch">
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <div class="h-100 p-5 bg-light border rounded-3">
                     <h2>Buscar</h2>
                     <form @submit.prevent="submit">
@@ -42,6 +42,32 @@
                     </form>
                 </div>
             </div>
+            <div class="col-md-8" v-if="showTable">
+                <div class="h-100 p-5 bg-light border rounded-3">
+                    <h2>Tabla Resultados</h2>
+                    <h6>UUID: <span class="badge bg-success">{{ uuid }}</span></h6>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Tipo Persona</th>
+                            <th scope="col">Tipo Cargo</th>
+                            <th scope="col">Departamento</th>
+                            <th scope="col">Porcentaje de similitud</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-for="result in dataTable">
+                            <th>{{ result.nombre }}</th>
+                            <td>{{ result.tipo_persona }}</td>
+                            <td>{{ result.tipo_cargo }}</td>
+                            <td>{{ result.departamento }}</td>
+                            <td>{{ result.porcentaje }} %</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -51,8 +77,10 @@ export default {
     data() {
         return {
             typeError: null,
-            showToken: null,
+            showTable: null,
             alertError: null,
+            dataTable: null,
+            uuid: null,
             menssageAlert: null,
             token: null,
             form:{
@@ -74,14 +102,27 @@ export default {
             }
             ).then(res => {
 
-                this.alertError = true
-                this.menssageAlert = 'esto encontramos'
                 this.typeError = 'alert alert-success'
-                console.log(res)
+
+                if(res.data.message === 'Exito con resultado'){
+                    this.alertError = true
+                    this.showTable = true
+                    this.menssageAlert = res.data.message
+                    this.dataTable = res.data.data
+                    this.uuid = res.data.uuid
+                }
+
+                if (res.data.message === 'Exito sin resultado'){
+                    this.showTable = false
+                    this.alertError = true
+                    this.menssageAlert = res.data.message
+                }
 
             }).catch(function (error) {
 
                 self.typeError = 'alert alert-danger'
+                self.showTable = false
+
                 let messageError = error.response.data.message
                 let statudError = error.response.status
 
@@ -90,6 +131,10 @@ export default {
                     self.menssageAlert = 'Verificar Token'
                 }
                 if (messageError && statudError === 422){
+                    self.alertError = true;
+                    self.menssageAlert = messageError
+                }
+                if (messageError && statudError === 500){
                     self.alertError = true;
                     self.menssageAlert = messageError
                 }
