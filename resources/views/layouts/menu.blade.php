@@ -12,6 +12,9 @@
                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="{{ route('search') }}">Buscar Parecido</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="{{ route('searchLog') }}">Buscar Resultados</a>
+                </li>
             </ul>
         </div>
     </div>
