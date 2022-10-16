@@ -36,4 +36,13 @@ class LogSearch extends Model
             'nombre_busqueda' => $data->nombre_busqueda,
         ]);
     }
+
+    public function searchLog($request){
+
+        try{
+            return LogSearch::where('uuid',$request->uuid)->get();
+        }catch (\Exception $e){
+            return ['error', 'errorDeSistema'];
+        }
+    }
 }

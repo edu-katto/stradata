@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => ['auth:api']], function () {
     Route::post('v1/searchRegister', [DictionaryController::class, 'searchRegister']);
+    Route::post('v1/searchLog', [DictionaryController::class, 'searchLog']);
 });
 
 Route::controller(AuthController::class)->group(function () {
