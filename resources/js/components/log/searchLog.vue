@@ -88,7 +88,6 @@ export default {
                 }
             ).then(res => {
 
-                console.log(res)
                 this.typeError = 'alert alert-success'
 
                 if(res.data.message === 'Exito con resultado'){
