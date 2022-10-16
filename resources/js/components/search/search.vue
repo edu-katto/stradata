@@ -91,7 +91,14 @@ export default {
     },
     methods:{
         submit(){
+
             let self = this;
+
+            //mensaje de envio de informacion
+            this.typeError = 'alert alert-info'
+            this.alertError = true
+            this.menssageAlert = 'Este proceso puede demorar un poco'
+
             axios.post("/api/v1/searchRegister",{
                 'name': this.form.name,
                 'similary': this.form.similary
